@@ -86,8 +86,8 @@ RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${SSH_AUTHORIZED_KEYS}" > /root/.ssh/authorized_keys && chown 600 /root/.ssh/authorized_keys
 
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY vhost.conf /etc/nginx/conf.d/000-default/vhost.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/vhost.conf /etc/nginx/conf.d/000-default/vhost.conf
 COPY pool.conf /etc/php-fpm.d/www.conf
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY container-px.ini /etc/supervisord.d/container-px.ini
