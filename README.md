@@ -19,8 +19,14 @@ Enviroment variables:
 - SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
 ```
 
+Build
 ```
-docker exec -p 80:80 aboozar/nginx-php-fpm-ssh
+docker build -f 71/Dockerfile -t aboozar/php-7.1 .
+```
+
+Run
+```
+docker run --name php71-container -p 22 -p 80 aboozar/nginx-php-fpm-ssh
 ```
 
 ## Handy Paths
