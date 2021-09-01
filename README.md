@@ -8,11 +8,16 @@ Compatible for Laravel concepts
 
 ## Usage
 Arguments:
+```
 - PHP_VERSION          [null|71, 72]
+```
+
 Enviroment variables:
+```
 - TZ                   example: Asia/Tehran
 - ENTRYPOINT           [null|web, schedule_run, workers] see entrypoint.sh for more details
 - SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
+```
 
 ```
 docker exec -p 80:80 aboozar/nginx-php-fpm-ssh
