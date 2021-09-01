@@ -4,13 +4,18 @@
 
 Nginx + PHP-FPM + SSH Docker image by [Samuraee](https://github.com/samuraee).
 
+Compatible for Laravel concepts
+
 ## Usage
-enviroment variables:
-- TZ
-- SSH_AUTHORIZED_KEYS
+Arguments:
+- PHP_VERSION          [null|71, 72]
+Enviroment variables:
+- TZ                   example: Asia/Tehran
+- ENTRYPOINT           [null|web, schedule_run, workers] see entrypoint.sh for more details
+- SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
 
 ```
-docker exec -p 80:80 samuraee/nginx-php-fpm-ssh
+docker exec -p 80:80 aboozar/nginx-php-fpm-ssh
 ```
 
 ## Handy Paths

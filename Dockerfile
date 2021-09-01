@@ -69,7 +69,8 @@ RUN ssh-keygen -A
 RUN ls -lash /root/
 
 # Configure things
-RUN sed -i -e 's~^;date.timezone =$~date.timezone = ${TZ}~g' /etc/php.ini \
+RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && sed -i -e 's~^;date.timezone =$~date.timezone = ${TZ}~g' /etc/php.ini \
     && mkdir -p /etc/nginx/conf.d/000-default \
     && mkdir -p /var/www \
     && mkdir -p /var/www/.well-known \
