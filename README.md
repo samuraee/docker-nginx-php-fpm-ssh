@@ -29,6 +29,15 @@ Run
 docker run --name php71-container -p 22 -p 80 aboozar/nginx-php-fpm-ssh
 ```
 
+mount points:
+```
+/etc/nginx/nginx.conf
+/etc/nginx/conf.d/000-default/vhost.conf
+/etc/php-fpm.d/www.conf
+/usr/local/bin/entrypoint.sh
+/etc/supervisord.d/container-px.ini
+```
+
 ## Handy Paths
 
 * nginx include: /etc/nginx/conf.d/*/*.conf
