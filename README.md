@@ -19,7 +19,7 @@ Enviroment variables:
 - SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
 ```
 
-## Build Os image based on Debian
+## STEP 1: Build Os image based on Debian
 This image included sshd, nginx and also nodejs from official apt repository
 
 ### build debian 10 buster
@@ -35,7 +35,7 @@ docker build --build-arg DEBIAN_VERSION=bullseye \
     -t aboozar/debian-slim-apt:bullseye .
 ```
 
-## Build PHP base image
+## STEP 2: Build PHP base image
 
 Available Debian versions: buster, bullseye
  - Use buster for PHP <= 7.3 and bullseye for PHP >= 7.4
@@ -86,15 +86,6 @@ docker build --build-arg PHP_VERSION=7.4 \
 
 # Run final application container
 
-## Handy Paths
-* nginx include: /etc/nginx/sites-enabled/*.*
-* nginx vhosts' webroots: /var/www/public
-* nginx logs: /dev/stdout or /var/log/nginx/
-
-Ideally the above ones should be mounted from docker host
-and container nginx configuration (see vhost.conf for example),
-site files and place to right logs to.
-
 ## Config files:
 First of fill the folloewing files based on your desired configs
 ```
@@ -102,10 +93,15 @@ First of fill the folloewing files based on your desired configs
 /etc/nginx/nginx.conf
 /etc/nginx/sites-enabled/default
 /etc/php/7.1/fpm/pool.d/www.conf
-/usr/local/bin/entrypoint.sh
 /etc/supervisord.d/web-px.ini # for web
-/etc/supervisord.d/queue-px.ini # for queu
+/etc/supervisord.d/queue-px.ini # for queue
 ```
+
+Ideally the above ones should be mounted from docker host
+and container nginx configuration (see vhost.conf for example),
+site files and place to right logs to.
+
+
 ## Run web container
 
 ```
@@ -137,6 +133,6 @@ docker run --build-arg ENTRYPOINT=workers \
 ```
 
 
-Both php-fpm and nginx run under `nazgul` inside the container
+Both php-fpm and nginx run under `nazgul` UID: 1000 inside the container
 
 Exposes port 8080 for nginx and 2222 for ssh

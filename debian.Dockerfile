@@ -18,6 +18,7 @@ RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime
 # Enable Networking
 RUN apt update && apt install -y --no-install-recommends \
     curl \
+    cron \
     wget \
     gnupg2 \
     ca-certificates \
@@ -52,3 +53,5 @@ RUN mkdir -p ~/.ssh \
     && touch ~/.ssh/authorized_keys \
     && echo "${SSH_AUTHORIZED_KEYS}" > ~/.ssh/authorized_keys \
     && chown 600 ~/.ssh/authorized_keys
+
+CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]

@@ -11,7 +11,7 @@ services:
     container_name: app-webserver
     build:
       context: .
-      dockerfile: app-web.Dockerfile
+      dockerfile: example-web.Dockerfile
     env_file:
       - .env
     ports:

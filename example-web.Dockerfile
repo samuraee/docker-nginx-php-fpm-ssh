@@ -11,12 +11,11 @@ LABEL TargetImageName="aboozar/my-sample-app"
 
 # Configure custom things
 
-COPY app/ssh/sshd_config /etc/ssh/sshd_config
-COPY app/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY app/nginx/vhost.conf /etc/nginx/sites-enabled/default
-COPY app/php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
-COPY app/container/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY app/container/web-px.conf /etc/supervisor/conf.d/container-px.conf
+COPY ssh/sshd_config /etc/ssh/sshd_config
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/vhost.conf /etc/nginx/sites-enabled/default
+COPY php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
+COPY container/web-px.conf /etc/supervisor/conf.d/web-px.conf
 
 EXPOSE 2222 8080
 

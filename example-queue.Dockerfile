@@ -11,12 +11,11 @@ LABEL TargetImageName="aboozar/my-sample-app-queue"
 
 # Configure custom things
 
-COPY deploy/app/ssh/sshd_config /etc/ssh/sshd_config
-COPY deploy/app/php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
-COPY deploy/app/container/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY deploy/app/container/queue-px.conf /etc/supervisor/conf.d/container-px.conf
+COPY ssh/sshd_config /etc/ssh/sshd_config
+COPY php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
+COPY container/queue-px.conf /etc/supervisor/conf.d/queue-px.conf
 
-EXPOSE 2222 8080
+EXPOSE 2222
 
 WORKDIR /var/www/
 
