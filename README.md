@@ -126,6 +126,8 @@ docker run --build-arg ENTRYPOINT=schedule_run \
 ```
 
 ## Run web container
+- Sample laravel web docker file: `app-web.Dockerfile`
+- Sample laravel queue docker file: `app-queue.Dockerfile`
 
 ```
 docker run --build-arg ENTRYPOINT=workers \
