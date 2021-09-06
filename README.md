@@ -9,45 +9,91 @@ Compatible for Laravel concepts
 ## Usage
 Arguments:
 ```
-- PHP_VERSION          [null|71, 72]
+- PHP_VERSION          [null|7.1, 7.2, 7..3, 7.4]
 ```
 
 Enviroment variables:
 ```
 - TZ                   example: Asia/Tehran
-- ENTRYPOINT           [null|web, schedule_run, workers] see entrypoint.sh for more details
+- ENTRYPOINT           [null|web, schedule_run, workers] see entrypoint.sh file for more details
 - SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
 ```
 
-Build
+## Build Os image based on Debian
+This image included sshd, nginx and also nodejs from official apt repository
 ```
-docker build -f 71/Dockerfile -t aboozar/php-7.1 .
+# build debian 10 buster
+docker build --build-arg DEBIAN_VERSION=buster -f debian.Dockerfile -t aboozar/debian-slim-apt:buster .
+# build debian 10 bullseye
+docker build --build-arg DEBIAN_VERSION=bullseye -f debian.Dockerfile -t aboozar/debian-slim-apt:bullseye .
 ```
 
-Run
+## Build PHP base image
+
+Available Debian versions: buster, bullseye
+ - Use buster for PHP <= 7.3 and bullseye for PHP >= 7.4
+
+Available PHP versions: 7.1, 7.2, 7.3, 7.4
 ```
-docker run --name php71-container -p 22 -p 80 aboozar/nginx-php-fpm-ssh
+docker build --build-arg PHP_VERSION=7.1 --build-arg DEBIAN_VERSION=buster -f php.Dockerfile -t aboozar/nginx-php-base:7.1 .
 ```
 
-mount points:
+## Build PHP 7.1, 7.2, 7.3 image
+This image included latest php 7.[1,2,3] and latest composer 1 version
+Find `php71.Dockerfile` fto see the installed php modules
 ```
-/etc/nginx/nginx.conf
-/etc/nginx/conf.d/000-default/vhost.conf
-/etc/php-fpm.d/www.conf
-/usr/local/bin/entrypoint.sh
-/etc/supervisord.d/container-px.ini
+docker build --build-arg PHP_VERSION=7.1 --build-arg DEBIAN_VERSION=buster -f php71.Dockerfile -t aboozar/nginx-php:7.1 .
+docker build --build-arg PHP_VERSION=7.2 --build-arg DEBIAN_VERSION=buster -f php72.Dockerfile -t aboozar/nginx-php:7.2 .
+docker build --build-arg PHP_VERSION=7.3 --build-arg DEBIAN_VERSION=buster -f php73.Dockerfile -t aboozar/nginx-php:7.3 .
 ```
+
+## Build PHP 7.4 image
+This image included latest php 7.4 and latest composer 2 version
+Find `php74.Dockerfile` fto see the installed php modules
+```
+docker build --build-arg PHP_VERSION=7.4 --build-arg DEBIAN_VERSION=bullseye -f php74.Dockerfile -t aboozar/nginx-php:7.4 .
+```
+
+# Run final application container
 
 ## Handy Paths
-
-* nginx include: /etc/nginx/conf.d/*/*.conf
-* nginx vhosts' webroots: /var/www/
+* nginx include: /etc/nginx/sites-enabled/*.*
+* nginx vhosts' webroots: /var/www/public
 * nginx logs: /dev/stdout or /var/log/nginx/
 
 Ideally the above ones should be mounted from docker host
 and container nginx configuration (see vhost.conf for example),
 site files and place to right logs to.
 
-Both php-fpm and nginx run under nobody inside the container
+## Config files:
+First of fill the folloewing files based on your desired configs
+```
+/etc/ssh/sshd_config
+/etc/nginx/nginx.conf
+/etc/nginx/sites-enabled/default
+/etc/php/7.1/fpm/pool.d/www.conf
+/usr/local/bin/entrypoint.sh
+/etc/supervisord.d/container-px.ini
+```
+## Run web container
 
-Exposes port 80 for nginx.
+```
+docker run --build-arg ENTRYPOINT=web --name my-web-container -p 2222:2222 -p 8080:8080 aboozar/nginx-php:7.1
+```
+
+## Run Laravel schedule_run container
+
+```
+docker run --build-arg ENTRYPOINT=schedule_run --name my-schdl-container -p 2222:2222 aboozar/nginx-php:7.1
+```
+
+## Run web container
+
+```
+docker run --build-arg ENTRYPOINT=workers --name my-q-container -p 2222:2222 aboozar/nginx-php:7.1
+```
+
+
+Both php-fpm and nginx run under `nazgul` inside the container
+
+Exposes port 8080 for nginx and 2222 for ssh
