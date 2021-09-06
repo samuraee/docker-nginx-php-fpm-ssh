@@ -1,0 +1,21 @@
+version: '3.7'
+
+volumes:
+  app_data:
+  pg_data:
+  redis_data:
+  rabbitmq_data:
+
+services:
+  app:
+    container_name: app-webserver
+    build:
+      context: .
+      dockerfile: app-web.Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+      - 2222:2222
+    volumes:
+      - ./:/var/www:rw,cached

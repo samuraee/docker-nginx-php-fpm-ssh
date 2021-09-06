@@ -7,7 +7,6 @@ FROM aboozar/debian-slim-apt:${DEBIAN_VERSION}
 # You can use version 7.1, 7.2, 7.3, 7.4
 ARG PHP_VERSION
 
-
 LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
 LABEL Name="Debisn Slim Docherfile including Nginx, PHP-FPM, SSH"
 LABEL Version="20210921"
@@ -19,7 +18,7 @@ RUN wget -O- https://packages.sury.org/php/apt.gpg | apt-key add - \
 
 RUN apt update
 
-RUN apt install -y php${PHP_VERSION} \
+RUN apt update && apt install -y --no-install-recommends php${PHP_VERSION} \
     php${PHP_VERSION}-bcmath \
     php${PHP_VERSION}-cli \
     php${PHP_VERSION}-curl \
@@ -42,6 +41,9 @@ RUN apt install -y php${PHP_VERSION} \
     php${PHP_VERSION}-xmlwriter \
     php${PHP_VERSION}-xmlrpc \
     php${PHP_VERSION}-zip \
-    php-pear
+    php-pear \
+    g++ \
+    make
 
-RUN pecl channel-update pecl.php.net && pecl install grpc apcu
+RUN pecl channel-update pecl.php.net \
+    && pecl install grpc apcu

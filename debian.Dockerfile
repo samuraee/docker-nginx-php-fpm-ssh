@@ -16,7 +16,7 @@ ENV SSH_AUTHORIZED_KEYS ""
 RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime
 
 # Enable Networking
-RUN apt update && apt install -y -no-install-recommends \
+RUN apt update && apt install -y --no-install-recommends \
     curl \
     wget \
     gnupg2 \
@@ -28,7 +28,11 @@ RUN apt update && apt install -y -no-install-recommends \
     supervisor \
     nodejs \
     zlib1g-dev \
-    openssh-server
+    openssh-server \
+    && apt clean \
+    && apt autoremove --yes \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/*
 
 # add non-root user
 RUN groupadd -g 1000 nazgul && \
