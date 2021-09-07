@@ -12,6 +12,8 @@ LABEL TargetImageName="aboozar/my-laravel-ron"
 # Configure custom things
 
 COPY app/ssh/sshd_config /etc/ssh/sshd_config
+COPY php/opcache.conf /etc/php/${PHP_VERSION}/mods-available/opcache.conf
+
 COPY container/cron-px.conf /etc/supervisor/conf.d/cron-px.conf
 
 # Configure cron jobs and ensure crontab-file permissions

@@ -33,7 +33,7 @@ services:
       - ./:/var/www:rw,cached
 
   cron:
-    container_name: app-ron
+    container_name: app-cron
     build:
       context: .
       dockerfile: example-cron.Dockerfile
