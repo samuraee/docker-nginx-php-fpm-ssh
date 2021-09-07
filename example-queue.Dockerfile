@@ -12,8 +12,11 @@ LABEL TargetImageName="aboozar/my-laravel-queue"
 # Configure custom things
 
 COPY ssh/sshd_config /etc/ssh/sshd_config
+
+# add any customization you need
 COPY php/opcache.conf /etc/php/${PHP_VERSION}/mods-available/opcache.conf
 
+# specify container's processes
 COPY container/queue-px.conf /etc/supervisor/conf.d/queue-px.conf
 
 EXPOSE 2222
