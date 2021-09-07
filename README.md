@@ -6,16 +6,21 @@ Nginx + PHP-FPM + SSH Docker image by [Samuraee](https://github.com/samuraee).
 
 Compatible for Laravel concepts
 
+
+All processes through this container handled by using Supervisord.
+You can deploy every service by customizing supervisor config files like what you can see in container folder
+
 ## Usage
 Arguments:
 ```
-- PHP_VERSION          [null|7.1, 7.2, 7..3, 7.4]
+- DEBIAN_VERSION       eg, buster, bullseye
+- PHP_VERSION          eg, 7.1, 7.2, 7..3, 7.4
+- COMPOSER_VERSION     eg, 1.10.22, 2.1.6, stable
 ```
 
-Enviroment variables:
+## Enviroment variables:
 ```
-- TZ                   example: Asia/Tehran
-- ENTRYPOINT           [null|web, schedule_run, workers] see entrypoint.sh file for more details
+- TZ                   eg: Asia/Tehran
 - SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
 ```
 
@@ -44,44 +49,9 @@ Available PHP versions: 7.1, 7.2, 7.3, 7.4
 ```
 docker build --build-arg PHP_VERSION=7.1 \
     --build-arg DEBIAN_VERSION=buster \
+    --build-arg COMPOSER_VERSION=1.10.22 \
     -f php.Dockerfile \
     -t aboozar/nginx-php-base:7.1 .
-```
-
-## Build PHP 7.1, 7.2, 7.3 final image
-This image included latest php 7.[1,2,3] and you can choose composer version by
-[COMPOSER_VERSION](https://getcomposer.org/download/) env
-
-Find `php71.Dockerfile` file to see the installed php modules
-```bash
-docker build --build-arg PHP_VERSION=7.1 \
-    --build-arg DEBIAN_VERSION=buster \
-    --build-arg COMPOSER_VERSION=1.10.22 \
-    -f php71.Dockerfile \
-    -t aboozar/nginx-php:7.1 .
-
-docker build --build-arg PHP_VERSION=7.2 \
-    --build-arg DEBIAN_VERSION=buster \
-    --build-arg COMPOSER_VERSION=2.1.6 \
-    -f php72.Dockerfile \
-    -t aboozar/nginx-php:7.2 .
-
-docker build --build-arg PHP_VERSION=7.3 \
-    --build-arg DEBIAN_VERSION=buster \
-    --build-arg COMPOSER_VERSION=stable \
-    -f php73.Dockerfile \
-    -t aboozar/nginx-php:7.3 .
-```
-
-## Build PHP 7.4 final image
-This image included latest php 7.4 and latest composer 2 version
-Find `php74.Dockerfile` fto see the installed php modules
-```
-docker build --build-arg PHP_VERSION=7.4 \
-    --build-arg DEBIAN_VERSION=bullseye \
-    --build-arg COMPOSER_VERSION=stable \
-    -f php74.Dockerfile \
-    -t aboozar/nginx-php:7.4 .
 ```
 
 # Run final application container
@@ -93,8 +63,9 @@ First of fill the folloewing files based on your desired configs
 /etc/nginx/nginx.conf
 /etc/nginx/sites-enabled/default
 /etc/php/7.1/fpm/pool.d/www.conf
-/etc/supervisord.d/web-px.ini # for web
-/etc/supervisord.d/queue-px.ini # for queue
+/etc/supervisord.d/web-px.ini    # for web container
+/etc/supervisord.d/cron-px.ini   # for cron container
+/etc/supervisord.d/queue-px.ini  # for queue container
 ```
 
 Ideally the above ones should be mounted from docker host
@@ -102,37 +73,32 @@ and container nginx configuration (see vhost.conf for example),
 site files and place to right logs to.
 
 
-## Run web container
+## sample laravel Dockerfile (web contaner) with PHP 7.1
+
+See `example-web.Dockerfile`
 
 ```
-docker run --build-arg ENTRYPOINT=web \
-    --name my-web-container \
-    -p 2222:2222 \
-    -p 8080:8080 \
-    aboozar/nginx-php:7.1
+FROM aboozar/nginx-php-base:7.1
+
+LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
+LABEL Name="SMSator container"
+LABEL Version="20210921"
+LABEL TargetImageName="aboozar/my-laravel"
+
+
+# # Configure things
+
+COPY deploy/app/ssh/sshd_config /etc/ssh/sshd_config
+COPY deploy/app/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY deploy/app/nginx/vhost.conf /etc/nginx/sites-enabled/default
+COPY deploy/app/php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
+
+COPY deploy/app/container/web-px.conf /etc/supervisor/conf.d/container-px.conf
+
+EXPOSE 2222 8080
+
+WORKDIR /var/www/
+
+# Change container to non-root user mode, it's not mandatory
+USER nazgul
 ```
-
-## Run Laravel schedule_run container
-
-```
-docker run --build-arg ENTRYPOINT=schedule_run \
-    --name my-schdl-container \
-    -p 2222:2222 \
-    aboozar/nginx-php:7.1
-```
-
-## Run web container
-- Sample laravel web docker file: `app-web.Dockerfile`
-- Sample laravel queue docker file: `app-queue.Dockerfile`
-
-```
-docker run --build-arg ENTRYPOINT=workers \
-    --name my-q-container \
-    -p 2222:2222 \
-    aboozar/nginx-php:7.1
-```
-
-
-Both php-fpm and nginx run under `nazgul` UID: 1000 inside the container
-
-Exposes port 8080 for nginx and 2222 for ssh

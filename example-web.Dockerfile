@@ -15,6 +15,7 @@ COPY ssh/sshd_config /etc/ssh/sshd_config
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/vhost.conf /etc/nginx/sites-enabled/default
 COPY php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
+
 COPY container/web-px.conf /etc/supervisor/conf.d/web-px.conf
 
 EXPOSE 2222 8080
@@ -23,5 +24,3 @@ WORKDIR /var/www/
 
 # change container to non-root mode
 USER nazgul
-
-CMD ["/usr/local/bin/entrypoint.sh"]

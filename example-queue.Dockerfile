@@ -21,5 +21,3 @@ WORKDIR /var/www/
 
 # change container to non-root mode
 USER nazgul
-
-CMD ["/usr/local/bin/entrypoint.sh"]

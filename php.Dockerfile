@@ -6,6 +6,7 @@ FROM aboozar/debian-slim-apt:${DEBIAN_VERSION}
 
 # You can use version 7.1, 7.2, 7.3, 7.4
 ARG PHP_VERSION
+ARG COMPOSER_VERSION=stable
 
 LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
 LABEL Name="Debisn Slim Docherfile including Nginx, PHP-FPM, SSH"
@@ -45,5 +46,19 @@ RUN apt update && apt install -y --no-install-recommends php${PHP_VERSION} \
     g++ \
     make
 
+# because Sodium is supported natively by PHP 7.2+
+RUN if [ "$PHP_VERSION" = "7.1" ] ; then apt install -y --no-install-recommends php${PHP_VERSION}-sodium; fi
+
+RUN sleep 30
+
 RUN pecl channel-update pecl.php.net \
     && pecl install grpc apcu
+
+RUN curl -sS https://getcomposer.org/installer | php -- \
+    --version=${COMPOSER_VERSION} \
+    --install-dir=/usr/bin --filename=composer
+
+RUN apt clean \
+    && apt autoremove --yes \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/*
