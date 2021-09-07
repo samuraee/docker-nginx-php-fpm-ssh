@@ -73,32 +73,14 @@ and container nginx configuration (see vhost.conf for example),
 site files and place to right logs to.
 
 
-## sample laravel Dockerfile (web contaner) with PHP 7.1
+## Sample laravel app Dockerfile (web contaner) with PHP 7.1
 
 See `example-web.Dockerfile`
 
-```
-FROM aboozar/nginx-php-base:7.1
+## Sample laravel queue Dockerfile (queue contaner) with PHP 7.1
 
-LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
-LABEL Name="SMSator container"
-LABEL Version="20210921"
-LABEL TargetImageName="aboozar/my-laravel"
+See `example-queue.Dockerfile`
 
+## Sample laravel cron Dockerfile (cron contaner) with PHP 7.1
 
-# # Configure things
-
-COPY deploy/app/ssh/sshd_config /etc/ssh/sshd_config
-COPY deploy/app/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY deploy/app/nginx/vhost.conf /etc/nginx/sites-enabled/default
-COPY deploy/app/php/pool.conf /etc/php/7.1/fpm/pool.d/www.conf
-
-COPY deploy/app/container/web-px.conf /etc/supervisor/conf.d/container-px.conf
-
-EXPOSE 2222 8080
-
-WORKDIR /var/www/
-
-# Change container to non-root user mode, it's not mandatory
-USER nazgul
-```
+See `example-cron.Dockerfile`

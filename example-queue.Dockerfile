@@ -4,9 +4,9 @@ ARG PHP_VERSION
 FROM aboozar/nginx-php:$PHP_VERSION
 
 LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
-LABEL Name="My Sample app container"
+LABEL Name="My aravel queue container"
 LABEL Version="20210921"
-LABEL TargetImageName="aboozar/my-sample-app-queue"
+LABEL TargetImageName="aboozar/my-laravel-queue"
 
 
 # Configure custom things
