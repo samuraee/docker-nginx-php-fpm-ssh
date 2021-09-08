@@ -6,7 +6,7 @@ FROM aboozar/debian-slim-apt:${DEBIAN_VERSION}
 
 # You can use version 7.1, 7.2, 7.3, 7.4
 ARG PHP_VERSION
-ARG COMPOSER_VERSION=stable
+ARG COMPOSER_VERSION=2.1.6
 
 LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
 LABEL Name="Debisn Slim Docherfile including Nginx, PHP-FPM, SSH"
@@ -14,7 +14,6 @@ LABEL Version="20210921"
 LABEL TargetImageName="aboozar/nginx-php-base:${PHP_VERSION}"
 
 RUN wget -O- https://packages.sury.org/php/apt.gpg | apt-key add - \
-    && wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php7.list
 
 RUN apt update
@@ -31,7 +30,6 @@ RUN apt update && apt install -y --no-install-recommends php${PHP_VERSION} \
     php${PHP_VERSION}-intl \
     php${PHP_VERSION}-json \
     php${PHP_VERSION}-mbstring \
-    php${PHP_VERSION}-mcrypt \
     php${PHP_VERSION}-mysqlnd \
     php${PHP_VERSION}-opcache \
     php${PHP_VERSION}-pdo \
@@ -46,13 +44,14 @@ RUN apt update && apt install -y --no-install-recommends php${PHP_VERSION} \
     g++ \
     make
 
-# because Sodium is supported natively by PHP 7.2+
-RUN if [ "$PHP_VERSION" = "7.1" ] ; then apt install -y --no-install-recommends php${PHP_VERSION}-sodium; fi
-
-RUN sleep 30
-
 RUN pecl channel-update pecl.php.net \
-    && pecl install grpc apcu
+    && pecl install grpc apcu protobuf
+
+# because Sodium is supported natively by PHP 7.2+
+RUN if [ "$PHP_VERSION" = "7.1" ] ; \
+    then apt install -y --no-install-recommends php${PHP_VERSION}-sodium php${PHP_VERSION}-mcrypt; \
+    else pecl install mcrypt; \
+    fi
 
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --version=${COMPOSER_VERSION} \

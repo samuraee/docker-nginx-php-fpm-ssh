@@ -9,6 +9,7 @@ LABEL Name="Debian Bullseye slim version including apt update"
 LABEL Version="20210921"
 LABEL TargetImageName="aboozar/debian-slim-apt:${DEBIAN_VERSION}"
 
+ARG NONROOT_USER=nazgul
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV TZ "Asia/Tehran"
 ENV SSH_AUTHORIZED_KEYS ""
@@ -29,6 +30,7 @@ RUN apt update && apt install -y --no-install-recommends \
     supervisor \
     nodejs \
     zlib1g-dev \
+    libmcrypt-dev \
     openssh-server \
     && apt clean \
     && apt autoremove --yes \
@@ -36,16 +38,16 @@ RUN apt update && apt install -y --no-install-recommends \
     && rm -rf /tmp/*
 
 # add non-root user
-RUN groupadd -g 1000 nazgul && \
-    useradd -r -u 1000 -g nazgul nazgul
+RUN groupadd -g 1000 $NONROOT_USER && \
+    useradd -r -u 1000 -g $NONROOT_USER $NONROOT_USER
 
 # give permission to required path to the generated non-root
 RUN mkdir -p /var/run/php/ \
     && mkdir -p /var/cache/nginx/ \
     && mkdir /run/sshd/ \
-    && chown nazgul:nazgul /run/ -R \
-    && chown nazgul:nazgul /var/ -R \
-    && chown nazgul /etc/ssh/ -R \
+    && chown $NONROOT_USER:$NONROOT_USER /run/ -R \
+    && chown $NONROOT_USER:$NONROOT_USER /var/ -R \
+    && chown $NONROOT_USER /etc/ssh/ -R \
     && echo '<?php phpinfo(); ?>' > /var/www/index.php
 
 # add ssh keys
@@ -54,4 +56,4 @@ RUN mkdir -p ~/.ssh \
     && echo "${SSH_AUTHORIZED_KEYS}" > ~/.ssh/authorized_keys \
     && chown 600 ~/.ssh/authorized_keys
 
-CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]
+CMD [ "supervisord", "-c", "/etc/supervisor/supervisord.conf" ]

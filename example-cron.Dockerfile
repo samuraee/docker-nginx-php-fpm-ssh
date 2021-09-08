@@ -1,31 +1,29 @@
-# You can use version 7.1, 7.2, 7.3, 7.4
-ARG PHP_VERSION
-
-FROM aboozar/nginx-php:$PHP_VERSION
+FROM aboozar/nginx-php-base:7.1
 
 LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
-LABEL Name="My Laravel cron container"
+LABEL Name="SMSator container"
 LABEL Version="20210921"
-LABEL TargetImageName="aboozar/my-laravel-ron"
+LABEL TargetImageName="aboozar/smsator"
 
+ARG NONROOT_USER=nazgul
 
 # Configure custom things
-
-COPY app/ssh/sshd_config /etc/ssh/sshd_config
+COPY deploy/app/ssh/sshd_config /etc/ssh/sshd_config
 
 # add any customization you need
-COPY php/opcache.conf /etc/php/${PHP_VERSION}/mods-available/opcache.conf
+COPY deploy/app/php/modules.ini /etc/php/7.1/mods-available/modules.ini
 
 # specify container's processes
-COPY container/cron-px.conf /etc/supervisor/conf.d/cron-px.conf
+COPY deploy/app/container/cron-px.conf /etc/supervisor/conf.d/cron-px.conf
 
-# Configure cron jobs and ensure crontab-file permissions
-COPY cron.d /etc/cron.d/
-RUN chmod 0644 /etc/cron.d/*
+RUN echo "* * * * * php /var/www/artisan schedule:run > /tmp/cron-log" >> /etc/cron.d/app-cron \
+    # Give the necessary rights to the user to run the cron
+    && crontab -u ${NONROOT_USER} /etc/cron.d/app-cron \
+    && chmod u+s /usr/sbin/cron
 
 EXPOSE 2222
 
 WORKDIR /var/www/
 
 # change container to non-root mode
-USER nazgul
+USER $NONROOT_USER

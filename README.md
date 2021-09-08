@@ -62,7 +62,10 @@ First of fill the folloewing files based on your desired configs
 /etc/ssh/sshd_config
 /etc/nginx/nginx.conf
 /etc/nginx/sites-enabled/default
-/etc/php/7.1/fpm/pool.d/www.conf
+# php-fpm config
+/etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+# php modules
+/etc/php/${PHP_VERSION}/mods-available/modules.conf
 /etc/supervisord.d/web-px.ini    # for web container
 /etc/supervisord.d/cron-px.ini   # for cron container
 /etc/supervisord.d/queue-px.ini  # for queue container
