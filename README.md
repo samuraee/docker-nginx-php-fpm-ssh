@@ -13,6 +13,7 @@ You can deploy every service by customizing supervisor config files like what yo
 ## Usage
 Arguments:
 ```
+- NONROOT_USER         eg, scorpion
 - DEBIAN_VERSION       eg, buster, bullseye
 - PHP_VERSION          eg, 7.1, 7.2, 7..3, 7.4
 - COMPOSER_VERSION     eg, 1.10.22, 2.1.6, stable
@@ -30,12 +31,14 @@ This image included sshd, nginx and also nodejs from official apt repository
 ### build debian 10 buster
 ```bash
 docker build --build-arg DEBIAN_VERSION=buster \
+    --build-arg NONROOT_USER=scorpion \
     -f debian.Dockerfile \
     -t aboozar/debian-slim-apt:buster .
 ```
 ### build debian 11 bullseye
 ```bash
 docker build --build-arg DEBIAN_VERSION=bullseye \
+    --build-arg NONROOT_USER=scorpion \
     -f debian.Dockerfile \
     -t aboozar/debian-slim-apt:bullseye .
 ```
@@ -50,6 +53,7 @@ Available PHP versions: 7.1, 7.2, 7.3, 7.4
 docker build --build-arg PHP_VERSION=7.1 \
     --build-arg DEBIAN_VERSION=buster \
     --build-arg COMPOSER_VERSION=1.10.22 \
+    --build-arg NONROOT_USER=scorpion \
     -f php.Dockerfile \
     -t aboozar/nginx-php-base:7.1 .
 ```

@@ -9,7 +9,7 @@ LABEL Name="Debian Bullseye slim version including apt update"
 LABEL Version="20210921"
 LABEL TargetImageName="aboozar/debian-slim-apt:${DEBIAN_VERSION}"
 
-ARG NONROOT_USER=nazgul
+ARG NONROOT_USER=scorpion
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV TZ "Asia/Tehran"
 ENV SSH_AUTHORIZED_KEYS ""

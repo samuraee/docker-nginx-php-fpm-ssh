@@ -8,7 +8,7 @@ LABEL Name="My aravel queue container"
 LABEL Version="20210921"
 LABEL TargetImageName="aboozar/my-laravel-queue"
 
-ARG NONROOT_USER=nazgul
+ARG NONROOT_USER=scorpion
 
 # Configure custom things
 
