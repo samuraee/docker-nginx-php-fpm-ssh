@@ -11,9 +11,6 @@ LABEL TargetImageName="aboozar/my-sample-app"
 # change container to non-root mode
 USER $NONROOT_USER
 
-# Configure custom things
-
-COPY ssh/sshd_config /etc/ssh/sshd_config
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/vhost.conf /etc/nginx/sites-enabled/default
 

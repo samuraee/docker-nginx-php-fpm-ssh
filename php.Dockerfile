@@ -9,7 +9,7 @@ ARG PHP_VERSION
 ARG COMPOSER_VERSION=2.1.6
 
 LABEL Maintainer="Aboozar Ghaffari <aboozar.ghf@gmail.com>"
-LABEL Name="Debisn Slim Docherfile including Nginx, PHP-FPM, SSH"
+LABEL Name="Debisn Slim Docherfile including Nginx, PHP-FPM"
 LABEL Version="20210921"
 LABEL TargetImageName="aboozar/nginx-php-base:${PHP_VERSION}"
 

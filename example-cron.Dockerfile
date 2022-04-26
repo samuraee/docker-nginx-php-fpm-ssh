@@ -7,9 +7,6 @@ LABEL TargetImageName="aboozar/smsator"
 
 ARG NONROOT_USER=scorpion
 
-# Configure custom things
-COPY deploy/app/ssh/sshd_config /etc/ssh/sshd_config
-
 # add any customization you need
 COPY deploy/app/php/modules.ini /etc/php/7.1/mods-available/modules.ini
 

@@ -1,8 +1,8 @@
-# nginx-php-fpm-ssh
+# nginx-php-fpm
 
 ## About
 
-Nginx + PHP-FPM + SSH Docker image by [Samuraee](https://github.com/samuraee).
+Nginx + PHP-FPM Docker image by [Samuraee](https://github.com/samuraee).
 
 Compatible for Laravel concepts
 
@@ -22,11 +22,10 @@ Arguments:
 ## Enviroment variables:
 ```
 - TZ                   eg: Asia/Tehran
-- SSH_AUTHORIZED_KEYS  /root/.ssh/authorized_keys file content
 ```
 
 ## STEP 1: Build Os image based on Debian
-This image included sshd, nginx and also nodejs from official apt repository
+This image included nginx and also nodejs from official apt repository
 
 ### build debian 10 buster
 ```bash
@@ -63,7 +62,6 @@ docker build --build-arg PHP_VERSION=7.1 \
 ## Config files:
 First of fill the folloewing files based on your desired configs
 ```
-/etc/ssh/sshd_config
 /etc/nginx/nginx.conf
 /etc/nginx/sites-enabled/default
 # php-fpm config

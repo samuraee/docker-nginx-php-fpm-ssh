@@ -10,10 +10,6 @@ LABEL TargetImageName="aboozar/my-laravel-queue"
 
 ARG NONROOT_USER=scorpion
 
-# Configure custom things
-
-COPY ssh/sshd_config /etc/ssh/sshd_config
-
 # add any customization you need
 COPY php/modules.ini /etc/php/${PHP_VERSION}/mods-available/modules.ini
 
